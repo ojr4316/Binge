@@ -22,7 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     if(empty($username_err) && empty($password_err)){
-        $sql = "SELECT id, username, password, email, image FROM users WHERE username = ?";
+        $sql = "SELECT id, username, password, email, image, location, college, coord_lat, coord_long FROM users WHERE username = ?";
 
         if($stmt = $mysqli->prepare($sql)){
             $stmt->bind_param("s", $param_username);
@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $stmt->store_result();
 
                 if($stmt->num_rows == 1){
-                    $stmt->bind_result($id, $username, $hashed_password, $email, $image);
+                    $stmt->bind_result($id, $username, $hashed_password, $email, $image, $location, $college, $coord_lat, $coord_long);
                     if($stmt->fetch()){
                         if(password_verify($password, $hashed_password)){
                             session_start();
@@ -42,6 +42,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["username"] = $username;
                             $_SESSION["email"] = $email;
                             $_SESSION["image"] = $image;
+                            $_SESSION["location"] = $location;
+                            $_SESSION["college"] = $college;
+                            $_SESSION["coord_lat"] = $coord_lat;
+                            $_SESSION["coord_long"] = $coord_long;
 
                             header("location: index");
                         } else{
@@ -80,11 +84,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 </head>
-<body class="popcornBg">
+<body>
+  <div class="popcornBg"></div>
+
   <header class="header" id="header">
     <div class="skew">
         <div class="header-inner">
-          <h1 class="logo text-white">Binge</h1>
+          <h1 class="logo text-white title-anim p-3">Binge</h1>
         </div>
     </div>
   </header>

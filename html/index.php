@@ -2,12 +2,6 @@
 $page = "index";
 include("pageSetup.php");
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("location: welcome");
-    exit;
-}
-
-
 // Get Joined Requests
 $joined = array();
 $sql  = 'SELECT * FROM `joinRequests` WHERE `joinUsername`="'.$_SESSION['username'].'"';
@@ -19,30 +13,65 @@ if ($result->num_rows > 0) {
 }
 
 // Get User's Request
-$sql = "SELECT * FROM `requests` WHERE `username`!='".$_SESSION['username']."' LIMIT 100";
-$result = $mysqli->query($sql);
 $toPrint = "<script> window.onload = function() {";
+$dups = array();
+if (isset($_SESSION["location"]) && $_SESSION['location'] != "") {
+$sql = "SELECT *, ( 3959 * acos( cos( radians(".$_SESSION['coord_lat'].") ) * cos( radians( `coord_lat` ) ) * cos( radians( `coord_long` ) - radians(".$_SESSION['coord_long'].") ) + sin( radians(".$_SESSION['coord_lat'].") ) * sin( radians( `coord_lat` ) ) ) ) AS distance FROM requests HAVING distance < 25 ORDER BY distance LIMIT 100;";
+$result = $mysqli->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
+        if ($row['username'] == $_SESSION['username']) {
+          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+        } else {
         if (in_array($row['id'], $joined)) {
           $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
         } else {
           $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
         }
+      }
+      array_push($dups, $row['id']);
     }
-    $toPrint .= " }; </script>";
-    echo $toPrint;
+} else {
+
 }
+}
+
+if (isset($_SESSION["college"]) && $_SESSION['college'] != "") {
+$sql = "SELECT * FROM `requests` WHERE `college` = '".$_SESSION["college"]."' LIMIT 100";
+$result = $mysqli->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+      if (!in_array($row['id'], $dups)) {
+        if ($row['username'] == $_SESSION['username']) {
+          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+        } else {
+        if (in_array($row['id'], $joined)) {
+          $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+        } else {
+          $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+        }
+      }
+    }
+    }
+} else {
+
+}
+}
+
+$toPrint .= "  if ($('#cards').children().length > 0) { $('#deleteMe').remove(); } if ($('#cards').children().length > 3) { $('.col').addClass('col-sm-4');} }; </script>";
+echo $toPrint;
 
 $mysqli->close();
 ?>
 
+<div class="container">
+  <div class="mt-3" id="deleteMe">
+  <h4 class=text-center> No Results Found </h4>
+  <h5 class=text-center> Try setting your location on your profile </h5>
+  </div>
 <div id="cards" class="row m-3"></div>
-
+</div>
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="index.js"></script>
 
 </html>

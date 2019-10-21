@@ -3,9 +3,9 @@ session_start();
 
 require_once "config.php";
 
-$show = "the office";
-$platform = "netflix";
-$when = "tonight";
+$show = "null";
+$platform = "none";
+$when = "null";
 
 if(isset($_POST['show'])){
    $show = trim($_POST['show']);
@@ -19,15 +19,19 @@ if(isset($_POST['when'])){
 
 echo $show." on ".$platform." ".$when;
 
-$sql = "INSERT INTO requests (username, media, platform, whenToWatch) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO requests (username, media, platform, whenToWatch, location, college, coord_lat, coord_long) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 if($stmt = $mysqli->prepare($sql)){
-    $stmt->bind_param("ssss", $userParam, $showParam, $platformParam, $whenParam);
+    $stmt->bind_param("ssssssdd", $userParam, $showParam, $platformParam, $whenParam, $locationParam, $collegeParam, $latParam, $longParam);
 
     $userParam = $_SESSION["username"];
     $showParam = $show;
     $platformParam = $platform;
     $whenParam = $when;
+    $locationParam = $_SESSION["location"];
+    $collegeParam = $_SESSION["college"];
+    $latParam = $_SESSION["coord_lat"];
+    $longParam = $_SESSION["coord_long"];
 
     if($stmt->execute()){
         header("location: index");

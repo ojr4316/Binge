@@ -33,7 +33,7 @@ echo $toPrint;
 $mysqli->close();
 ?>
 
-<div class="my-5">
+<div class="container my-5">
 <div id="sendRequest">
   <form id="watchRequest" method="post" action="add.php">
     <h3> Watch Request </h3>
@@ -60,6 +60,7 @@ $mysqli->close();
     <button type="submit" class="btn btn-primary binge-red-bg ">Add to Box Office</button>
   </form>
 </div>
+
   <div id="cards" class="row m-3"></div>
 </div>
 </body>

@@ -18,4 +18,5 @@ if($stmt = $mysqli->prepare($sql)){
 }
 $stmt->close();
 $mysqli->close();
+$amountOfRequests -= 1;
 ?>

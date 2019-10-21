@@ -90,7 +90,21 @@ if($stmt = $mysqli->prepare($sql)){
 }
 $stmt->close();
 
-header("location: deleteRequest.php?id=".$_GET['id']);
+$sql = "DELETE FROM `joinRequests` WHERE `id`=?";
+
+if($stmt = $mysqli->prepare($sql)){
+    $stmt->bind_param("i", $idParam);
+    $idParam = $_GET['id'];
+    if($stmt->execute()){
+        $referer = filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL);
+        header("location: ".$referer);
+    } else{
+        echo("Statement failed: ". $stmt->error . "<br>");
+        echo "Something went wrong. Please try again later.";
+    }
+}
 
 $mysqli->close();
+
+$amountOfRequests -= 1;
 ?>

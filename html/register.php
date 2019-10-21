@@ -97,11 +97,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 </head>
-<body class="popcornBg">
+<body>
+  <div class="popcornBg"></div>
+
   <header class="header" id="header">
     <div class="skew">
         <div class="header-inner">
-          <h1 class="logo text-white">Binge</h1>
+          <h1 class="logo text-white title-anim p-3">Binge</h1>
         </div>
     </div>
   </header>

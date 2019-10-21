@@ -2,7 +2,6 @@
 $page = "chats";
 include 'pageSetup.php';
 
-
 $toPrint = "<script> window.onload = function() {";
 $sql = "SELECT id, userTwo FROM chats WHERE userOne = '".$_SESSION['username']."'";
 $result = $mysqli->query($sql);
