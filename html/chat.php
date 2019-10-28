@@ -19,17 +19,17 @@ if ($result->num_rows > 0) {
   }
 }
 
-$toPrint .= " }; </script>";
+$toPrint .= " if ($('#chatSelect').children().length == 0) { $('#chatSelect').addClass('mt-5'); } selectedChat = $('.chat-button').val(); update(); }; </script>";
 echo $toPrint;
 
 $mysqli->close();
 ?>
 
-  <div id="chatSelect"></div>
+  <div id="chatSelect" class="m-3"></div>
 
   <div id="chatbox" class="mx-auto">
     <form class="chatForm" id="chat">
-      <textarea readonly id="chatArea" class="form-control"></textarea>
+      <div style="white-space:pre-wrap; overflow-y: scroll" id="chatArea" class="form-control"></div>
       <input id="textToAdd" style="" type="text"></input>
       <button id="sendButton" class="binge-red-bg chat-button" type="submit">Send</button>
     </form>

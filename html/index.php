@@ -21,56 +21,57 @@ $result = $mysqli->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         if ($row['username'] == $_SESSION['username']) {
-          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         } else {
         if (in_array($row['id'], $joined)) {
-          $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         } else {
-          $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         }
       }
       array_push($dups, $row['id']);
     }
-} else {
-
 }
 }
 
 if (isset($_SESSION["college"]) && $_SESSION['college'] != "") {
-$sql = "SELECT * FROM `requests` WHERE `college` = '".$_SESSION["college"]."' LIMIT 100";
+$sql = "SELECT * FROM `requests` WHERE `college` = '".$_SESSION["college"]."' LIMIT 100 ORDER BY `started`";
 $result = $mysqli->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
       if (!in_array($row['id'], $dups)) {
         if ($row['username'] == $_SESSION['username']) {
-          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addYourCard("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         } else {
         if (in_array($row['id'], $joined)) {
-          $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addCardJoined("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         } else {
-          $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'");';
+          $toPrint .= 'addCard("'.$row['username'].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$row['id'].'", "'.$row['img'].'", "'.$row['summary'].'");';
         }
       }
     }
     }
-} else {
-
 }
 }
 
-$toPrint .= "  if ($('#cards').children().length > 0) { $('#deleteMe').remove(); } if ($('#cards').children().length > 3) { $('.col').addClass('col-sm-4');} }; </script>";
+$toPrint .= "  if ($('#cards').children().length > 0) { $('#deleteMe').remove(); } resizeTickets(); }; </script>";
 echo $toPrint;
 
 $mysqli->close();
 ?>
 
-<div class="container">
+<div class="container-fluid">
   <div class="mt-3" id="deleteMe">
   <h4 class=text-center> No Results Found </h4>
   <h5 class=text-center> Try setting your location on your profile </h5>
   </div>
-<div id="cards" class="row m-3"></div>
+<div id="cards" class="row m-5 p-5"></div>
 </div>
+
+<div id="disclaimer">
+  <p class="mb-0 text-white p-3" style="background-color: black;"> Binge does not own any rights to any of the movies or shows displayed </p>
+</div>
+
 </body>
 <script src="index.js"></script>
 

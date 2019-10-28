@@ -14,9 +14,7 @@ if ($result->num_rows > 0) {
       $amountOfRequests += 1;
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +22,7 @@ if ($result->num_rows > 0) {
     <title>Binge</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="A social media based around with watching with others"></meta>
+    <meta name="description" content="A social media based around watching with others"></meta>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet">
@@ -60,6 +58,9 @@ if ($result->num_rows > 0) {
       </li>
       <li class="nav-item splat-anim <?php if ($page == 'tickets') { echo "active"; }?>">
         <a class="text-white nav-link" href="requests">Tickets <?php echo '<span class="badge badge-light">'.$amountOfRequests.'</span>'; ?> </a>
+      </li>
+      <li class="nav-item splat-anim <?php if ($page == 'create') { echo "active"; }?>">
+        <a class="text-white nav-link" href="create">Create</a>
       </li>
       <li class="nav-item splat-anim <?php if ($page == 'chats') { echo "active"; }?>">
         <a class="text-white nav-link" href="chat">Chats</a>

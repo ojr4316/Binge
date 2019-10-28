@@ -1,63 +1,74 @@
 var selectedChat = -1;
 
+var isActive = false;
+var numLines = 0;
+var delay = 0;
+
 // Box Office: Join
-function addCard(name, media, platform, when, id) {
-  $("#cards").append('<div class="col py-2"><div class="mainPageCard card border-' + platform + ' h-100"><div class="card-body"><h5 class="card-title"><a href=user/' + name + '>' + name + '</a></h5><p class="card-text">Wants to watch <b class="text-' + platform + '">' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="join(' + id + ', `' + name + '`)" class="btn btn-block card-button">Join</button></div></div></div>')
-  /*$("#cards").append('<div><div class="custom-column"><img class="card-img-top" src="platforms/' + platform + '.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'
-  + '<a href="user/' + name + '" class="card-title card-title-link">' + name + '</a>' + '</h5><h6 class="card-subtitle mb-2 text-muted">Wants to watch <span class="binge-blue"><b> ' + media +
-  '</b> </span> on <span class="text-' + platform + '">'+ platform[0].toUpperCase() +  platform.slice(1) +'</span></h6><p class="card-text">'
-  + when + '</p><button id="cardButton' + id + '" onclick="join(' + id + ', `' + name + '`)" class="btn btn-block card-button">Join</button></div></div></div>');
-  */
+function addCard(name, media, when, id, img, sum) {
+  //$("#cards").append('<div class="col py-2"><div class="mainPageCard card h-100"><div class="card-body"><h5 class="card-title"><a href=user/' + name + '>' + name + '</a></h5><p class="card-text">Wants to watch <b>' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="join(' + id + ', `' + name + '`)" class="btn btn-block card-button">Join</button></div></div></div>');
+  delay += 50;
+  $("#cards").append('<div tabindex="0" id="card' + id + '" class="col col-lg-2 mb-5 pb-5 col-12 py-2 mainPageCard card-anim" style="animation-delay:' + delay +
+  'ms;"><div class="view overlay"><img src="https://image.tmdb.org/t/p/w500' + img +
+  '" class="img-fluid " alt=""><div class="text-center mask rgba-red-strong d-flex flex-column"><h5 class="text-white m-3"><em><a tabindex="-1" class="text-white" href="user/' + name + '"> ' +
+  name + '</a></em> wants to watch <b> ' + media + '</b></h5><p class="white-text m-3 summary">' + sum +
+  '</p><button style="background-color: white;" id="cardButton' + id + '" onclick="join(' + id + ', `' + name + '`)" class="btn card-button mt-auto binge-red mb-3">Join</button></div></div></div>');
 }
 
 // Profile: Delete
-function addCardProfile(name, media, platform, when, id) {
-  $("#cards").append('<div id="card' + id + '" class="col py-2"><div class="card border-' + platform + ' h-100"><div class="card-body"><h5 class="card-title">' + name + '</h5><p class="card-text">Wants to watch <b class="text-' + platform + '">' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="deleteTicket(' + id + ')" class="btn btn-block card-button">Delete</button></div></div></div>')
-  /*$("#cards").append('<div><div class="custom-column"><img class="card-img-top" src="platforms/' + platform + '.png" alt="Card image cap"><div class="card-body"><h6 class="card-title">'
-  + '<a href="user/' + name + '" class="card-title card-title-link">' + name + '</a>' + '</h6><h6 class="card-subtitle mb-2 text-muted">Wants to watch <span class="binge-blue"><b> ' + media +
-  '</b> </span> on <span class="text-' + platform + '">'+ platform[0].toUpperCase() +  platform.slice(1) +'</span></h6><p class="card-text">'
-  + when + '</p><a href="remove.php?id=' + id + '" class="card-link">Delete</a></div></div></div>');
-*/
+function addCardProfile(name, media, when, id, img, sum) {
+  //$("#cards").append('<div id="card' + id + '" class="col py-2"><div class="card h-100"><div class="card-body"><h5 class="card-title">' + name + '</h5><p class="card-text">Wants to watch <b>' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="deleteTicket(' + id + ')" class="btn btn-block card-button">Delete</button></div></div></div>');
+  $("#cards").append('<div tabindex="0" id="card' + id + '" class="col col-lg-2 col-12 py-2 mainPageCard card-anim"><div class="view overlay"><img src="https://image.tmdb.org/t/p/w500' + img +
+  '" class="img-fluid " alt=""><div class="text-center mask rgba-red-strong d-flex flex-column"><h5 class="text-white m-3"> ' +
+  name + ' wants to watch <b> ' + media + '</b></h5><p class="white-text m-3 summary">' + sum +
+  '</p><button style="background-color: white;" id="cardButton' + id + '" onclick="deleteTicket(' + id +
+  ')" class="btn card-button mt-auto binge-red mb-3">Delete</button></div></div></div>');
 }
 
 // Box Office: Ticket you created
-function addYourCard(name, media, platform, when, id) {
-  $("#cards").append('<div id="card' + id + '" class="col py-2"><div class="mainPageCard card border-' + platform + ' h-100"><div class="card-body"><h5 class="card-title"><a href=user/' + name + '>' + name + '</a></h5><p class="card-text">Wants to watch <b class="text-' + platform + '">' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="deleteTicket(' + id + ')" class="btn btn-block card-button">Delete</button></div></div></div>')
-  /*$("#cards").append('<div><div class="custom-column"><img class="card-img-top" src="platforms/' + platform + '.png" alt="Card image cap"><div class="card-body"><h6 class="card-title">'
-  + '<a href="user/' + name + '" class="card-title card-title-link">' + name + '</a>' + '</h6><h6 class="card-subtitle mb-2 text-muted">Wants to watch <span class="binge-blue"><b> ' + media +
-  '</b> </span> on <span class="text-' + platform + '">'+ platform[0].toUpperCase() +  platform.slice(1) +'</span></h6><p class="card-text">'
-  + when + '</p><a href="remove.php?id=' + id + '" class="card-link">Delete</a></div></div></div>');
-*/
+function addYourCard(name, media, when, id, img, sum) {
+  delay += 50;
+  //$("#cards").append('<div id="card' + id + '" class="col py-2"><div class="mainPageCard card h-100"><div class="card-body"><h5 class="card-title"><a href=user/' + name + '>' + name + '</a></h5><p class="card-text">Wants to watch <b>' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="deleteTicket(' + id + ')" class="btn btn-block card-button">Delete</button></div></div></div>');
+  $("#cards").append('<div tabindex="0" id="card' + id + '" class="col col-lg-2 mb-5 pb-5 col-12 py-2 mainPageCard card-anim" style="animation-delay:' + delay +
+  'ms;"><div class="view overlay"><img src="https://image.tmdb.org/t/p/w500' + img +
+  '" class="img-fluid " alt=""><div class="text-center mask rgba-red-strong d-flex flex-column"><h5 class="text-white m-3"><em><a tabindex="-1" class="text-white" href="user/' + name + '"> ' +
+  name + '</a></em> wants to watch <b> ' + media + '</b></h5><p class="white-text m-3 summary">' + sum +
+  '</p><button style="background-color: white;" id="cardButton' + id + '" onclick="deleteTicket(' + id +
+  ')" class="btn card-button mt-auto binge-red mb-3">Delete</button></div></div></div>');
+
 }
 
 // Box Office: Ticket you joined
-function addCardJoined(name, media, platform, when, id) {
-  $("#cards").append('<div class="col py-2"><div class="mainPageCard card border-' + platform + ' h-100"><div class="card-body"><h5 class="card-title"><a href=user/' + name + '>' + name + '</a></h5><p class="card-text">Wants to watch <b class="text-' + platform + '">' + media + '</b></p><p class="card-text">' + when + '</p><button class="btn btn-block card-button disabled">Joined</button></div></div></div>')
-  /*$("#cards").append('<div><div class="custom-column"><img class="card-img-top" src="platforms/' + platform + '.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'
-  + '<a href="user/' + name + '" class="card-title card-title-link">' + name + '</a>' + '</h5><h6 class="card-subtitle mb-2 text-muted">Wants to watch <span class="binge-blue"><b> ' + media +
-  '</b> </span> on <span class="text-' + platform + '">'+ platform[0].toUpperCase() +  platform.slice(1) +'</span></h6><p class="card-text">'
-  + when + '</p><button class="btn btn-block card-button disabled">Joined</button></div></div></div>');*/
+function addCardJoined(name, media, when, id, img, sum) {
+  delay += 50;
+  $("#cards").append('<div tabindex="0" id="card' + id + '" class="col col-lg-2 mb-5 pb-5 col-12 py-2 mainPageCard card-anim" style="animation-delay:' + delay +
+  'ms;"><div class="view overlay"><img src="https://image.tmdb.org/t/p/w500' + img +
+  '" class="img-fluid " alt=""><div class="text-center mask rgba-red-strong d-flex flex-column"><h5 class="text-white m-3"><em><a tabindex="-1" class="text-white" href="user/' + name + '"> ' +
+  name + '</a></em> wants to watch <b> ' + media + '</b></h5><p class="white-text m-3 summary">' + sum +
+  '</p><button style="background-color: white;" id="cardButton' + id + '" class="btn card-button mt-auto binge-red mb-3 disabled">Joined</button></div></div></div>');
 }
 
 // Ticket
-function addCardRequest(name, media, platform, when, id) {
-  $("#cards").append('<div id="card' + id + '" class="col py-2"><div class="card border-' + platform + ' h-100"><div class="card-body"><h5 class="card-title">' + name + '</h5><p class="card-text">Wants to watch <b class="text-' + platform + '">' + media + '</b></p><p class="card-text">' + when + '</p><button id="cardButton' + id + '" onclick="acceptRequest(`' + name + '`, `' + media + '`, ' + id + ')" class="btn btn-block card-button">Accept</button><button id="cardButton' + id + '" onclick="deleteRequest(' + id + ')" class="btn btn-block card-button">Deny</button></div></div></div>')
+function addCardRequest(name, media, when, id, img, sum) {
+  $("#cards").append('<div tabindex="0" id="card' + id + '" class="col col-lg-2 mb-5 pb-5 col-12 py-2 mainPageCard card-anim"><div class="view overlay"><img src="https://image.tmdb.org/t/p/w500' + img +
+  '" class="img-fluid " alt=""><div class="text-center mask rgba-red-strong d-flex flex-column"><h5 class="text-white m-3"> ' +
+  name + ' wants to watch <b> ' + media + '</b></h5><p class="white-text m-3 summary">' + sum +
+  '</p><div class="mt-auto mb-3"><button style="background-color: white;" id="cardButton' + id +
+  '" onclick="acceptRequest(`' + name + '`, `' + media + '`, ' + id +
+  ')" class="btn card-button binge-red">Accept</button><button style="background-color: white;" id="cardButton' + id +
+  '" onclick="deleteRequest(' + id + ')" class="btn card-button binge-red">Deny</button></div></div></div></div>');
 
-  /*$("#cards").append('<div><div class="custom-column"><img class="card-img-top" src="platforms/' + platform + '.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'
-  + '<a href="user/' + name + '" class="card-title card-title-link">' + name + '</a>' + '</h5><h6 class="card-subtitle mb-2 text-muted">Wants to join you to watch <span class="binge-blue"><b> ' + media +
-  '</b> </span></h6><p class="card-text">'
-  + when + '</p><a href="acceptRequest?user=' + name + '&media=' + media + '&id='
- + id + '"> Accept </a><a href="deleteRequest.php?id=' + id + '" class="float-right"> Deny </a></div></div></div>');*/
 }
 
 $("#chat").submit(function(e) {
   e.preventDefault();
+  if ($("#textToAdd").val().trim() != "") {
   $.ajax({ url: '/addChat.php',
            data: {'chatId': selectedChat, 'text': $("#textToAdd").val()},
            type: 'POST',
            error:function(exception){alert('Exception:'+exception);}
   });
-
+  }
   $("#textToAdd").val("");
 });
 
@@ -66,23 +77,30 @@ function addChatOption(chatId, user) {
 }
 
 function update() {
-  $.ajax({ url: '/readChat.php',
-              type: 'GET',
-              data: {'chatId': selectedChat},
-              success:function(result){
-                if ($("#chatArea").text() != result) {
-                  $("#chatArea").text(result);
-                  document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
-                }
-                setTimeout(update(), 1000);
-              },
-              error:function(exception){alert('Exception:'+exception);}
-  });
+  setInterval(function () {
+    if (isActive) { return; }
+    isActive = true;
+    try {
+      $.ajax({ url: '/readChat.php',
+                  type: 'GET',
+                  data: {'chatId': selectedChat},
+                  success:function(result){
+                    $("#chatArea").html(result);
+
+                    if (numLines != result.split("</b>"|"</p>").length) {
+                      document.getElementById("chatArea").scrollTop = document.getElementById("chatArea").scrollHeight;
+                      numLines = result.split("</b>"|"</p>").length;
+                    }
+
+                    isActive = false;
+                  }
+                });
+    } catch (ex) { isActive = false;}
+  }, 200);
 }
 
 function setValue(e) {
   selectedChat = e.value;
-  update();
 }
 
 function join(id, name) {
@@ -106,10 +124,11 @@ function acceptRequest(user, media, id) {
               },
               error:function(exception){alert('Exception:'+exception);}
   });
+  $(".badge").text($(".badge").text() - 1);
 }
 
 function deleteRequest(id) {
-  $.ajax({ url: '/deleteRequest.php',
+   $.ajax({ url: '/deleteRequest.php',
               type: 'GET',
               data: {"id": id},
               success:function(result){
@@ -117,6 +136,7 @@ function deleteRequest(id) {
               },
               error:function(exception){alert('Exception:'+exception);}
   });
+  $(".badge").text($(".badge").text() - 1);
 }
 
 function deleteTicket(id) {
@@ -125,10 +145,15 @@ function deleteTicket(id) {
               data: {"id": id},
               success:function(result){
                 $("#card" + id).remove();
+                resizeTickets();
               },
               error:function(exception){alert('Exception:'+exception);}
   });
 }
 
-
-// TEST STATEMENT addCard("Alyssa", "Tangled", "netflix", "tonight");
+function resizeTickets() {
+  if ($("#cards").children().length < 2) {
+    $("#cards").children().removeClass("col-lg-2");
+    $("#cards").children().addClass("col-lg-8");
+  }
+}

@@ -2,6 +2,10 @@
 $page = "tickets";
 include('pageSetup.php');
 
+if ($_SESSION["location"] == "" && $_SESSION["college"] == "") {
+  header("location: noset");
+}
+
 // Get Join Requests pertaining to self
 $joinNames = array();
 $requestIds = array();
@@ -24,43 +28,16 @@ for($x = 0; $x < count($requestIds); $x++) {
   $result = $mysqli->query($sql);
   if ($result->num_rows > 0) {
       while($row = $result->fetch_assoc()) {
-        $toPrint .= 'addCardRequest("'.$joinNames[$x].'", "'.$row['media'].'", "'. $row['platform'].'", "'.$row['whenToWatch'].'", "'.$joinRequests[$x].'");';
+        $toPrint .= 'addCardRequest("'.$joinNames[$x].'", "'.$row['media'].'", "'.$row['whenToWatch'].'", "'.$joinRequests[$x].'", "'.$row['img'].'", "'.$row['summary'].'");';
       }
   }
 }
-$toPrint .= " }; </script>";
+$toPrint .= " if ($('#cards').children().length == 0) { $('.container').append('<div class=".'"p-3 text-center binge-white-box "'."><h4> Requests from other users will show up here </h4></div>')} else { resizeTickets(); } }; </script>";
 echo $toPrint;
 $mysqli->close();
 ?>
 
 <div class="container my-5">
-<div id="sendRequest">
-  <form id="watchRequest" method="post" action="add.php">
-    <h3> Watch Request </h3>
-    <div class="form-group">
-      <label for="showInput">What do you want to watch? </label>
-      <input required autocomplete="off" type="text" class="form-control" name="show" id="showInput" size="50" placeholder="The Office, Good Omens, Death Note">
-    </div>
-
-    <div class="form-group">
-      <label for="platformInput">What to watch it on? </label>
-      <select name="platform" id="platformInput" class="platform-select">
-        <option selected>Platform</option>
-        <option value="netflix">Netflix</option>
-        <option value="hulu">Hulu</option>
-        <option value="youtube">YouTube</option>
-        <option value="amazon">Amazon</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="whenInput">When do you want to watch? </label>
-      <input required name="when" type="text" class="form-control" id="whenInput" size="50" placeholder="Tonight, This Week, Thursday">
-    </div>
-    <button type="submit" class="btn btn-primary binge-red-bg ">Add to Box Office</button>
-  </form>
-</div>
-
   <div id="cards" class="row m-3"></div>
 </div>
 </body>

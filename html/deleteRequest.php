@@ -10,7 +10,6 @@ if($stmt = $mysqli->prepare($sql)){
     $idParam = $_GET['id'];
     if($stmt->execute()){
         $referer = filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL);
-        header("location: ".$referer);
     } else{
         echo("Statement failed: ". $stmt->error . "<br>");
         echo "Something went wrong. Please try again later.";
@@ -18,5 +17,4 @@ if($stmt = $mysqli->prepare($sql)){
 }
 $stmt->close();
 $mysqli->close();
-$amountOfRequests -= 1;
 ?>

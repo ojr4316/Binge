@@ -85,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-  <div class="popcornBg"></div>
+  <div class="theaterBg"></div>
 
   <header class="header" id="header">
     <div class="skew">

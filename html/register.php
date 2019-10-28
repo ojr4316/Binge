@@ -10,7 +10,6 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    // Check if username is taken
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
     } else {
@@ -57,20 +56,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       $email = trim($_POST["email"]);
     }
 
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)  && empty($email_err)){
-        $sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($email_err)){
+        $sql = "INSERT INTO users (username, password, email, availability) VALUES (?, ?, ?, ?)";
 
         if($stmt = $mysqli->prepare($sql)){
-            $stmt->bind_param("sss", $param_username, $param_password, $param_email);
+            $stmt->bind_param("ssss", $param_username, $param_password, $param_email, $param_availability);
 
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
             $param_email = $email;
+            $param_availability = json_encode(["true", "true", "true", "true", "true", "true", "true"]);
 
             if($stmt->execute()){
                 header("location: login");
             } else{
-                echo "Something went wrong. Please try again later.";
+                printf("Error: %s.\n", $stmt->error);
             }
         }
         $stmt->close();
@@ -98,7 +98,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-  <div class="popcornBg"></div>
+  <div class="theaterBg"></div>
 
   <header class="header" id="header">
     <div class="skew">
@@ -116,7 +116,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <span class="help-block binge-blue"><?php echo $username_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                        <input type="text" name="email" class="form-control" value="<?php echo $username; ?>" placeholder="Email">
+                        <input type="text" name="email" class="form-control" value="<?php echo $email; ?>" placeholder="Email">
                         <span class="help-block binge-blue"><?php echo $email_err; ?></span>
                     </div>
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">

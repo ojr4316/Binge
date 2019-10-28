@@ -3,35 +3,43 @@ session_start();
 
 require_once "config.php";
 
-$show = "null";
-$platform = "none";
+$id = -1;
+$name = "null";
+$desc = "null";
+$img = "null";
 $when = "null";
-
-if(isset($_POST['show'])){
-   $show = trim($_POST['show']);
-}
-if(isset($_POST['platform']) && $_POST['platform'] != "Platform"){
-   $platform = trim($_POST['platform']);
-}
-if(isset($_POST['when'])){
-   $when = trim($_POST['when']);
+if(isset($_POST['id'])){
+   $id = trim($_POST['id']);
 }
 
-echo $show." on ".$platform." ".$when;
+if(isset($_POST['name'])){
+   $name = trim($_POST['name']);
+}
 
-$sql = "INSERT INTO requests (username, media, platform, whenToWatch, location, college, coord_lat, coord_long) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+if(isset($_POST['desc'])){
+   $desc = trim($_POST['desc']);
+}
+
+if(isset($_POST['img'])){
+   $img = trim($_POST['img']);
+}
+
+$sql = "INSERT INTO requests (username, media, whenToWatch, location, college, coord_lat, coord_long, mediaId, img, summary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 if($stmt = $mysqli->prepare($sql)){
-    $stmt->bind_param("ssssssdd", $userParam, $showParam, $platformParam, $whenParam, $locationParam, $collegeParam, $latParam, $longParam);
+    $stmt->bind_param("sssssddiss", $userParam, $showParam, $whenParam, $locationParam, $collegeParam, $latParam, $longParam, $mIdParam, $imgParam, $sumParam);
 
     $userParam = $_SESSION["username"];
-    $showParam = $show;
-    $platformParam = $platform;
+    $showParam = $name;
     $whenParam = $when;
     $locationParam = $_SESSION["location"];
     $collegeParam = $_SESSION["college"];
     $latParam = $_SESSION["coord_lat"];
     $longParam = $_SESSION["coord_long"];
+    $mIdParam = $id;
+    $sumParam = $desc;
+    $imgParam = $img;
+
 
     if($stmt->execute()){
         header("location: index");

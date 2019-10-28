@@ -80,7 +80,7 @@ if($stmt = $mysqli->prepare($sql)){
 
     $chatIdParam = $chat_id;
     $senderParam = "SERVER";
-    $messageParam = PHP_EOL."Lets watch ".$_GET['media'].PHP_EOL;
+    $messageParam = "Lets watch ".$_GET['media'];
 
     if($stmt->execute()){
     }else{
